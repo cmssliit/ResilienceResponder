@@ -1,8 +1,17 @@
+using CrisisManagementSystem.API.DataLayer;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var connectionString = builder.Configuration.GetConnectionString("CrisisManagementDatabaseConnection");
+builder.Services.AddDbContext<CrisisManagementDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
