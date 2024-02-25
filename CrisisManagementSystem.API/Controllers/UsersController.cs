@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.DTOs.User;
+using AutoMapper;
+using CrisisManagementSystem.API.IRepository;
 
 namespace CrisisManagementSystem.API.Controllers
 {
@@ -14,35 +16,41 @@ namespace CrisisManagementSystem.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly CrisisManagementDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
         //since we register our dbcontext with builder.services in program.cs
         //it geives the ability to inject almost anyfile wewant
-        public UsersController(CrisisManagementDbContext context)
+        public UsersController(IMapper mapper,IUserRepository userRepository)
         {
-            _context = context;
+            _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<GetUserDto>>> GetUsers()
         {
-          if (_context.Users == null)
+          if (await _userRepository.GetAllAsync() == null)
           {
               return NotFound();
           }
-            return await _context.Users.ToListAsync();
+            var users = await _userRepository.GetAllAsync();
+
+            var getusers = _mapper.Map<List<GetUserDto>>(users);
+
+            return Ok(getusers); 
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-          if (_context.Users == null)
+          if (await _userRepository.GetAllAsync() == null)
           {
               return NotFound();
           }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetAsync(id);
 
             if (user == null)
             {
@@ -55,22 +63,30 @@ namespace CrisisManagementSystem.API.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UpdateUserDto updateUser)
         {
-            if (id != user.Id)
+            if (id != updateUser.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            // _context.Entry(updateUser).State = EntityState.Modified;
+
+            var user = await _userRepository.GetAsync(id);//from this line entity get tracked.
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(updateUser,user); //from this line it get modified
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _userRepository.UpdateAsync(user);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!await UserExists(id))
                 {
                     return NotFound();
                 }
@@ -88,15 +104,9 @@ namespace CrisisManagementSystem.API.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(CreateUserDto createUser)
         {
-            var user = new User
-            {
-                UserName = createUser.UserName,
-                Password = createUser.Password,
-                Role = createUser.Role
-            };
+          var user = _mapper.Map<User>(createUser);
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _userRepository.AddAsync(user);
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
@@ -105,25 +115,24 @@ namespace CrisisManagementSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (_context.Users == null)
+            if (await _userRepository.GetAllAsync() == null)
             {
                 return NotFound();
             }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userRepository.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private async Task<bool> UserExists(int id)
         {
-            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await _userRepository.Exists(id);
         }
     }
 }
