@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrisisManagementSystem.API.DataLayer;
+using CrisisManagementSystem.API.DTOs.User;
 
 namespace CrisisManagementSystem.API.Controllers
 {
@@ -85,12 +86,15 @@ namespace CrisisManagementSystem.API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(CreateUserDto createUser)
         {
-          if (_context.Users == null)
-          {
-              return Problem("Entity set 'CrisisManagementDbContext.Users'  is null.");
-          }
+            var user = new User
+            {
+                UserName = createUser.UserName,
+                Password = createUser.Password,
+                Role = createUser.Role
+            };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
