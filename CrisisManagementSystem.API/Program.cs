@@ -2,6 +2,7 @@ using CrisisManagementSystem.API.Configurations;
 using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.IRepository;
 using CrisisManagementSystem.API.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -15,6 +16,10 @@ builder.Services.AddDbContext<CrisisManagementDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddIdentityCore<SystemUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<CrisisManagementDbContext>();
+ 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,6 +40,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IAuthManager, AuthManager>();
 
 var app = builder.Build();
 

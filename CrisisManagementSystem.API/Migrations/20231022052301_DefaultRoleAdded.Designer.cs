@@ -4,6 +4,7 @@ using CrisisManagementSystem.API.DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrisisManagementSystem.API.Migrations
 {
     [DbContext(typeof(CrisisManagementDbContext))]
-    partial class CrisisManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231022052301_DefaultRoleAdded")]
+    partial class DefaultRoleAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
