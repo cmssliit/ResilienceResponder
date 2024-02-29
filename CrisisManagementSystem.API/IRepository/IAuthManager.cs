@@ -6,6 +6,6 @@ namespace CrisisManagementSystem.API.IRepository
     public interface IAuthManager
     {
         Task<IEnumerable<IdentityError>> RegisterUser(SystemUserDto systemUserDto);
-        Task<bool> Login(LoginDto loginDto);
+        Task<AuthResponseDto> Login(LoginDto loginDto);
     }
 }
