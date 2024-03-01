@@ -117,7 +117,7 @@ namespace CrisisManagementSystem.API.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize (Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (await _userRepository.GetAllAsync() == null)
