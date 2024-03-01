@@ -9,11 +9,13 @@ using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.DTOs.User;
 using AutoMapper;
 using CrisisManagementSystem.API.IRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CrisisManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -63,6 +65,7 @@ namespace CrisisManagementSystem.API.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutUser(int id, UpdateUserDto updateUser)
         {
             if (id != updateUser.Id)
@@ -102,6 +105,7 @@ namespace CrisisManagementSystem.API.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<User>> PostUser(CreateUserDto createUser)
         {
           var user = _mapper.Map<User>(createUser);
@@ -113,6 +117,7 @@ namespace CrisisManagementSystem.API.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (await _userRepository.GetAllAsync() == null)
