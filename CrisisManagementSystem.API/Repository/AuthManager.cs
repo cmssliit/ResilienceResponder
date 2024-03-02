@@ -16,6 +16,10 @@ namespace CrisisManagementSystem.API.Repository
         private readonly IMapper _mapper;
         private readonly UserManager<SystemUser> _userManager;
         private readonly IConfiguration _configuration;
+        private SystemUser _user;
+        private const string _loginProvider = "CrisisManagmentAPI";
+        private const string _refreshToken = "RefreshToken";
+
 
         public AuthManager(IMapper mapper , 
                            UserManager<SystemUser> userManager,
@@ -29,59 +33,60 @@ namespace CrisisManagementSystem.API.Repository
         public async Task<AuthResponseDto> Login(LoginDto loginDto)
         {
             bool isValidUser = false;
-            
-                var user = await _userManager.FindByEmailAsync(loginDto.Email);
-               isValidUser = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
-                if (user == null || !isValidUser)
+                _user = await _userManager.FindByEmailAsync(loginDto.Email);
+               isValidUser = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+
+                if (_user == null || !isValidUser)
                 {
                     return null;
                 }
 
                
 
-                var token = await GenerateToken(user);
+                var token = await GenerateToken();
 
                 return new AuthResponseDto()
                 {
-                    UserId = user.Id,
-                    Token = token
+                    UserId = _user.Id,
+                    Token = token,
+                    RefreshToken = await CreateRefreshToken()
                 };
         }
 
         public async Task<IEnumerable<IdentityError>> RegisterUser(SystemUserDto systemUserDto)
         {
-            var user = _mapper.Map<SystemUser>(systemUserDto);
+            _user = _mapper.Map<SystemUser>(systemUserDto);
 
-            user.UserName = systemUserDto.Email;
+            _user.UserName = systemUserDto.Email;
 
             //password .netcore has a mechanism to hash it and save
-            var result = await _userManager.CreateAsync(user,systemUserDto.Password);
+            var result = await _userManager.CreateAsync(_user, systemUserDto.Password);
 
             if(result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(_user, "User");
             }
 
             return result.Errors;
         }
 
-        private async Task<string> GenerateToken(SystemUser systemUser)
+        private async Task<string> GenerateToken()
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var roles = await _userManager.GetRolesAsync(systemUser);
+            var roles = await _userManager.GetRolesAsync(_user);
             var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x)).ToList();
-            var userClaims = await _userManager.GetClaimsAsync(systemUser);
+            var userClaims = await _userManager.GetClaimsAsync(_user);
 
             var claims = new List<Claim>
             {
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub,systemUser.Email),
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub,_user.Email),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email,systemUser.Email),
-                new Claim("uid",systemUser.Id)
+                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email,_user.Email),
+                new Claim("uid",_user.Id)
             }.Union(userClaims).Union(roleClaims);
 
             var token = new JwtSecurityToken(
@@ -93,6 +98,58 @@ namespace CrisisManagementSystem.API.Repository
             ); ;
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        public async Task<string> CreateRefreshToken()
+        {
+            //removing old token from database
+            await _userManager.RemoveAuthenticationTokenAsync(_user, _loginProvider, _refreshToken);
+
+            // creating new token 
+            var newRefreshedToken = await _userManager.GenerateUserTokenAsync(_user, _loginProvider, _refreshToken);
+
+            // set the token in database
+            var result = await _userManager.SetAuthenticationTokenAsync(_user, _loginProvider, _refreshToken, newRefreshedToken);
+
+            return newRefreshedToken;
+        }
+
+        public async Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request)
+        {
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.Token);
+            var username = tokenContent.Claims
+                                       .ToList()
+                                       .FirstOrDefault(
+                                        q =>
+                                        q.Type == System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email
+                                        )?.Value;
+
+            _user = await _userManager.FindByNameAsync(username);
+
+            if (_user == null || _user.Id != request.UserId)
+            {
+                return null;
+            }
+
+            var isValidRefreshToken = await _userManager.VerifyUserTokenAsync(_user,_loginProvider, _refreshToken,request.RefreshToken);
+
+            if(isValidRefreshToken)
+            {
+                var token = await GenerateToken();
+
+                return new AuthResponseDto
+                {
+                    Token = token,
+                    UserId = _user.Id,
+                    RefreshToken = await CreateRefreshToken()
+                };
+            }
+
+            await _userManager.UpdateSecurityStampAsync(_user);
+
+            return null;
         }
     }
 }

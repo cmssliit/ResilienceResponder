@@ -21,7 +21,9 @@ builder.Services.AddDbContext<CrisisManagementDbContext>(options =>
 
 builder.Services.AddIdentityCore<SystemUser>()
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<CrisisManagementDbContext>();
+    .AddTokenProvider<DataProtectorTokenProvider<SystemUser>>("CrisisManagmentAPI")
+    .AddEntityFrameworkStores<CrisisManagementDbContext>()
+    .AddDefaultTokenProviders();
  
 
 builder.Services.AddControllers();
