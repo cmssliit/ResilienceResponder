@@ -1,6 +1,7 @@
 using CrisisManagementSystem.API.Configurations;
 using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.IRepository;
+using CrisisManagementSystem.API.Middleware;
 using CrisisManagementSystem.API.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -83,6 +84,8 @@ if (app.Environment.IsDevelopment())
 
 //what request coming , how long it took ex-http request
 app.UseSerilogRequestLogging();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

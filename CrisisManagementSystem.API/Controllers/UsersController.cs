@@ -10,6 +10,7 @@ using CrisisManagementSystem.API.DTOs.User;
 using AutoMapper;
 using CrisisManagementSystem.API.IRepository;
 using Microsoft.AspNetCore.Authorization;
+using CrisisManagementSystem.API.Exceptions;
 
 namespace CrisisManagementSystem.API.Controllers
 {
@@ -46,20 +47,19 @@ namespace CrisisManagementSystem.API.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<GetUserDto>> GetUser(int id)
         {
-          if (await _userRepository.GetAllAsync() == null)
-          {
-              return NotFound();
-          }
+          
             var user = await _userRepository.GetAsync(id);
 
             if (user == null)
             {
-                return NotFound();
+                throw new NotFoundException(nameof(GetUser), id.ToString());
             }
 
-            return user;
+            var getUserDto = _mapper.Map<GetUserDto>(user);
+
+            return Ok(getUserDto);
         }
 
         // PUT: api/Users/5
