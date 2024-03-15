@@ -11,7 +11,8 @@ namespace CrisisManagementSystem.API.DataLayer
     {
         public int Id { get; set; }
         public string DeptName { get; set; }
-        public int DeptHeadId { get; set; }
+
+        public string DeptHeadId { get; set; }
 
         public int LocationId { get; set; }
         public virtual SystemUser DeptHead { get; set; }

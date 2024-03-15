@@ -33,6 +33,11 @@ namespace CrisisManagementSystem.API.DataLayer
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
+            modelBuilder.Entity<Department>()
+       .HasOne(d => d.DeptHead)
+       .WithOne(u => u.UserDepartment)
+       .HasForeignKey<SystemUser>(u => u.DepartmentId);
         }
 
     }
