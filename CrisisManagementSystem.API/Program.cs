@@ -53,6 +53,8 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IWorkflowTaskRepository, WorkflowTaskRepository>();
 builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 builder.Services.AddScoped<IWorkFlowtaskExecutionRepository, WorkFlowtaskExecutionRepository>();
+builder.Services.AddScoped<IIncidentRepository,IncidentRepository>();
+
 
 builder.Services.AddAuthentication(options =>
 {

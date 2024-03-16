@@ -12,7 +12,7 @@ namespace CrisisManagementSystem.API.Application.DTOs.Department
         //it will only consider when adding new user
         [Required]
         public string DeptName { get; set; }
-        public int DeptHeadId { get; set; }
+        public string DeptHeadId { get; set; }
         public int LocationId { get; set; }
     }
 }

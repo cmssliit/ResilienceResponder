@@ -10,5 +10,7 @@ namespace CrisisManagementSystem.API.Application.DTOs.User
         public string LastName { get; set; }
         public string NIC { get; set; }
 
+        public int DepartmentId { get; set; }
+
     }
 }

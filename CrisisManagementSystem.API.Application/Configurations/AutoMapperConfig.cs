@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CrisisManagementSystem.API.Application.DTOs.User;
+using CrisisManagementSystem.API.Application.DTOs.Incident;
 using CrisisManagementSystem.API.DataLayer.Entities;
 
 namespace CrisisManagementSystem.API.Application.Configurations
@@ -33,6 +34,10 @@ namespace CrisisManagementSystem.API.Application.Configurations
             CreateMap<WorkFlowtaskExecution, DTOs.WorkFlowtaskExecution.CreateWorkFlowtaskExecutionDto>().ReverseMap();
             CreateMap<WorkFlowtaskExecution, DTOs.WorkFlowtaskExecution.GetWorkFlowtaskExecutionDto>().ReverseMap();
             CreateMap<WorkFlowtaskExecution, DTOs.WorkFlowtaskExecution.UpdateWorkFlowtaskExecutionDto>().ReverseMap();
+
+            CreateMap<Incident, CreateIncidentDto>().ReverseMap();
+            CreateMap<Incident, GetIncidentDto>().ReverseMap();
+            CreateMap<Incident, UpdateIncidentDto>().ReverseMap();
 
         }
     }
