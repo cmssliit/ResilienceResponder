@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrisisManagementSystem.API.DataLayer
+namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class Department
     {
@@ -20,7 +20,7 @@ namespace CrisisManagementSystem.API.DataLayer
 
         [NotMapped]
         public virtual ICollection<SystemUser> DepartmentMembers { get; set; }
-        
+
 
     }
 }

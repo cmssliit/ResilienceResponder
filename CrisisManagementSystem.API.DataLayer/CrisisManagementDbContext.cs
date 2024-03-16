@@ -1,4 +1,5 @@
 ﻿using CrisisManagementSystem.API.DataLayer.Configuration;
+using CrisisManagementSystem.API.DataLayer.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

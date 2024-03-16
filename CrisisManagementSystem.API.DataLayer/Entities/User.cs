@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CrisisManagementSystem.API.DataLayer
+namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class User
     {

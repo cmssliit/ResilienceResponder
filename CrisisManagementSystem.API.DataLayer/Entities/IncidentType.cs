@@ -1,4 +1,4 @@
-﻿namespace CrisisManagementSystem.API.DataLayer
+﻿namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class IncidentType
     {

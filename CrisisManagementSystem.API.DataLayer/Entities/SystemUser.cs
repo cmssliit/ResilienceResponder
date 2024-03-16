@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CrisisManagementSystem.API.DataLayer
+namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class SystemUser : IdentityUser
     {

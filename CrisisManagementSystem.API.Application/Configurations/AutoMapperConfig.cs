@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.Application.DTOs.User;
+using CrisisManagementSystem.API.DataLayer.Entities;
 
 namespace CrisisManagementSystem.API.Application.Configurations
 {

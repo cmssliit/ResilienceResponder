@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CrisisManagementSystem.API.DataLayer
+namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class IncidentMedia
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public int MediaType { get; set; }
 
         public string Path { get; set; }

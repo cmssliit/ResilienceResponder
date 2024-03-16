@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using CrisisManagementSystem.API.DataLayer.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

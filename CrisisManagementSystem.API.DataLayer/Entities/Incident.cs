@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CrisisManagementSystem.API.DataLayer
+namespace CrisisManagementSystem.API.DataLayer.Entities
 {
     public class Incident
     {
@@ -12,7 +12,7 @@ namespace CrisisManagementSystem.API.DataLayer
         public int IncidentDepartmentId { get; set; }
 
         [ForeignKey(nameof(IncidentTypeId))]
-        public int IncidentTypeId {get; set;}
+        public int IncidentTypeId { get; set; }
         public virtual IncidentType IncidentType { get; set; }
 
         [ForeignKey(nameof(ReporterId))]

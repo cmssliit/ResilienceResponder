@@ -1,11 +1,11 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CrisisManagementSystem.API.DataLayer;
 using CrisisManagementSystem.API.Application.DTOs.WorkflowTask;
 using AutoMapper;
 using CrisisManagementSystem.API.Application.IRepository;
 using CrisisManagementSystem.API.Application.DTOs.User;
+using CrisisManagementSystem.API.DataLayer.Entities;
 
 namespace CrisisManagementSystem.API.Controllers
 {
