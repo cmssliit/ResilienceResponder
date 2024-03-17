@@ -1,10 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CrisisManagementSystem.API.Application.DTOs.Workflow;
+using CrisisManagementSystem.API.Application.DTOs.Incident;
 using AutoMapper;
 using CrisisManagementSystem.API.Application.IRepository;
-using CrisisManagementSystem.API.Application.DTOs.Incident;
 using CrisisManagementSystem.API.DataLayer.Entities;
 
 namespace CrisisManagementSystem.API.Controllers
@@ -109,7 +108,7 @@ namespace CrisisManagementSystem.API.Controllers
             return CreatedAtAction("GetIncident", new { id = incident.Id }, incident);
         }
 
-        // DELETE: api/Workflows/5
+        // DELETE: api/Incident/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIncident(int id)
         {

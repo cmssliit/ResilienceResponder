@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CrisisManagementSystem.API.Application.DTOs.User;
 using CrisisManagementSystem.API.Application.DTOs.Incident;
+using CrisisManagementSystem.API.Application.DTOs.Notification;
 using CrisisManagementSystem.API.DataLayer.Entities;
 
 namespace CrisisManagementSystem.API.Application.Configurations
@@ -38,6 +39,11 @@ namespace CrisisManagementSystem.API.Application.Configurations
             CreateMap<Incident, CreateIncidentDto>().ReverseMap();
             CreateMap<Incident, GetIncidentDto>().ReverseMap();
             CreateMap<Incident, UpdateIncidentDto>().ReverseMap();
+
+
+            CreateMap<Notification, CreateNotificationDto>().ReverseMap();
+            CreateMap<Notification, GetNotificationDto>().ReverseMap();
+            CreateMap<Notification, UpdateNotificationDto>().ReverseMap();
 
         }
     }
