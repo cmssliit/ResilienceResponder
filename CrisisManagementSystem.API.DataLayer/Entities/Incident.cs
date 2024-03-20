@@ -7,6 +7,7 @@ namespace CrisisManagementSystem.API.DataLayer.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Descripton { get; set; }
+        public int Severity { get; set; }
 
         [ForeignKey(nameof(IncidentDepartmentId))]
         public int IncidentDepartmentId { get; set; }
