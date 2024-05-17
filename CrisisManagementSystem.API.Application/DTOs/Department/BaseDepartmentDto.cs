@@ -13,6 +13,6 @@ namespace CrisisManagementSystem.API.Application.DTOs.Department
         [Required]
         public string DeptName { get; set; }
         public string DeptHeadId { get; set; }
-        public int LocationId { get; set; }
+        public int LocationId { get; set;  }
     }
 }
