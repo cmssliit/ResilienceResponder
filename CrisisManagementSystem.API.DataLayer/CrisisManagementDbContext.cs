@@ -4,6 +4,8 @@ using CrisisManagementSystem.API.DataLayer.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
+// Updated Data Layer
+
 namespace CrisisManagementSystem.API.DataLayer
 {
     public class CrisisManagementDbContext : IdentityDbContext<SystemUser>
